@@ -1,0 +1,20 @@
+{
+    "name": "zhusaidong/php-timeago",
+    "description": "php timeage",
+    "type": "library",
+    "require": {
+        "php": ">=5.6"
+    },
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "zhusaidong",
+            "email": "zhusaidong@gmail.com"
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+    		"zhusaidong\\TimeAgo\\":"src/"
+    	}
+    }
+}
