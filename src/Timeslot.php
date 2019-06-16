@@ -9,18 +9,18 @@ namespace zhusaidong\TimeAgo;
 class Timeslot
 {
 	/**
-	 * @var $timeslot timeslot
+	 * @var array $timeslot timeslot
 	 */
 	private $timeslot = [];
 	
 	/**
 	 * __construct
 	 *
-	 * @param int     $start   timeslot start
-	 * @param int     $end     timeslot end
-	 * @param Locales $locales locales
+	 * @param int            $start   timeslot start
+	 * @param int            $end     timeslot end
+	 * @param Locales|string $locales locales
 	 */
-	public function __construct($start, $end, Locales $locales)
+	public function __construct(int $start, int $end, $locales)
 	{
 		$this->timeslot = [
 			'start'   => $start,
@@ -34,7 +34,7 @@ class Timeslot
 	 *
 	 * @return array time slot
 	 */
-	public function get()
+	public function get() : array
 	{
 		return $this->timeslot;
 	}

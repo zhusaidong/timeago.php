@@ -9,11 +9,11 @@ namespace zhusaidong\TimeAgo;
 class Locales
 {
 	/**
-	 * @var mixed $singular singular
+	 * @var string $singular singular
 	 */
 	private $singular = NULL;
 	/**
-	 * @var mixed $plural plural
+	 * @var string $plural plural
 	 */
 	private $plural = NULL;
 	
@@ -23,7 +23,7 @@ class Locales
 	 * @param string $singular singular
 	 * @param string $plural   plural
 	 */
-	public function __construct($singular, $plural = NULL)
+	public function __construct(string $singular, string $plural = NULL)
 	{
 		$this->singular = $singular;
 		$this->plural   = $plural;
@@ -34,7 +34,7 @@ class Locales
 	 *
 	 * @return string singular
 	 */
-	public function getSingular()
+	public function getSingular() : string
 	{
 		return $this->singular;
 	}
@@ -44,7 +44,7 @@ class Locales
 	 *
 	 * @return string plural
 	 */
-	public function getPlural()
+	public function getPlural() : ?string
 	{
 		return $this->plural;
 	}

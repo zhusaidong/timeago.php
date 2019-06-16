@@ -20,7 +20,7 @@ class TimeGroup
 	 *
 	 * @return TimeGroup
 	 */
-	public function set(Timeslot $timeslot)
+	public function set(Timeslot $timeslot) : TimeGroup
 	{
 		$this->timeGroup[] = $timeslot;
 		
@@ -32,7 +32,7 @@ class TimeGroup
 	 *
 	 * @return array time group
 	 */
-	public function get()
+	public function get() : array
 	{
 		return $this->timeGroup;
 	}

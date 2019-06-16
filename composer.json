@@ -2,19 +2,27 @@
     "name": "zhusaidong/php-timeago",
     "description": "php timeage",
     "type": "library",
-    "require": {
-        "php": ">=5.6"
-    },
-    "license": "BSD",
+    "license": "MIT",
     "authors": [
         {
             "name": "zhusaidong",
             "email": "zhusaidong@gmail.com"
         }
     ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
     "autoload": {
-    	"psr-4": {
-    		"zhusaidong\\TimeAgo\\":"src/"
-    	}
+        "psr-4": {
+            "zhusaidong\\TimeAgo\\":"src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     }
 }

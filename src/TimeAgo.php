@@ -6,6 +6,9 @@
  */
 namespace zhusaidong\TimeAgo;
 
+use InvalidArgumentException;
+use Exception;
+
 class TimeAgo
 {
 	/**
@@ -25,7 +28,7 @@ class TimeAgo
 		'year'   => 0,
 	];
 	/**
-	 * @var $locales locales
+	 * @var array $locales locales
 	 */
 	private $locales = [];
 	/**
@@ -44,14 +47,14 @@ class TimeAgo
 	/**
 	 * time diff
 	 *
-	 * @return array|int
+	 * @return array|null
 	 */
-	private function getTimeDiff()
+	private function getTimeDiff() : ?array
 	{
 		$diff = time() - $this->timestamp;
 		if($diff < 0)
 		{
-			return -1;
+			return NULL;
 		}
 		
 		$ago = [
@@ -82,7 +85,7 @@ class TimeAgo
 	 *
 	 * @return string Locales
 	 */
-	private function getLocales($ago)
+	private function getLocales(array $ago) : string
 	{
 		$locales = $this->locales[$this->language][$ago['locales']];
 		
@@ -124,19 +127,10 @@ class TimeAgo
 	 */
 	private function initLocales()
 	{
-		/*
-		//glob方法在目录有特殊字符(比如[])时会有问题
 		array_map(function($local)
 		{
 			$this->registerLocales(pathinfo($local, PATHINFO_FILENAME), include($local));
 		}, glob(__DIR__ . '/locales/*.php'));
-		*/
-		
-		$dir = __DIR__ . '/locales/';
-		array_map(function($local) use ($dir)
-		{
-			substr($local, -4) == '.php' and $this->registerLocales(pathinfo($local, PATHINFO_FILENAME), include($dir . $local));
-		}, scandir($dir));
 	}
 	
 	/**
@@ -146,30 +140,29 @@ class TimeAgo
 	 * @param array  $config
 	 *
 	 * @return TimeAgo
+	 * @throws Exception
 	 */
-	public function registerLocales($name, $config)
+	public function registerLocales(string $name, array $config) : TimeAgo
 	{
-		if(($diff = array_diff(array_keys($this->timeConfig), array_keys($config))) and !empty($diff))
+		if(!empty($diff = array_diff(array_keys($this->timeConfig), array_keys($config))))
 		{
-			echo 'unable to register locales \'' . $name . '\', the \'' . implode(',', $diff) . '\' not exist';
-			exit;
+			throw new Exception('unable to register locales \'' . $name . '\', the \'' . implode(',', $diff) . '\' not exist');
 		}
 		
 		foreach($config as $type => $local)
 		{
-			if($local instanceof TimeGroup)
+			$local = !$local instanceof TimeGroup ? : $local->get();
+			if(is_array($local))
 			{
 				$t = range(1, $this->timeConfig[$type]);
-				foreach($local->get() as $value)
+				foreach($local as $timeslot)
 				{
-					$timeslot = $value->get();
-					$_t       = range($timeslot['start'], $timeslot['end']);
-					$t        = array_diff($t, $_t);
+					$timeslot = !$timeslot instanceof Timeslot ? : $timeslot->get();
+					$t        = array_diff($t, range($timeslot['start'], $timeslot['end']));
 				}
 				if(!empty($t))
 				{
-					echo 'unable to register locales \'' . $name . '\', the \'' . $type . '\' timeslot is incomplete';
-					exit;
+					throw new Exception('unable to register locales \'' . $name . '\', the \'' . $type . '\' timeslot is incomplete');
 				}
 			}
 		}
@@ -186,7 +179,7 @@ class TimeAgo
 	 *
 	 * @return TimeAgo
 	 */
-	public function setLanguage($language)
+	public function setLanguage(string $language) : TimeAgo
 	{
 		$this->language = $language;
 		
@@ -200,7 +193,7 @@ class TimeAgo
 	 *
 	 * @return TimeAgo
 	 */
-	public function setTimestamp($timestamp)
+	public function setTimestamp(int $timestamp) : TimeAgo
 	{
 		$this->timestamp = $timestamp;
 		
@@ -213,20 +206,21 @@ class TimeAgo
 	 * @param string $language language
 	 *
 	 * @return string
+	 * @throws Exception
+	 * @throws InvalidArgumentException
 	 */
-	public function format($language = '')
+	public function format(string $language = '') : string
 	{
 		$language != '' and $this->setLanguage($language);
 		if(!isset($this->locales[$this->language]))
 		{
-			echo $this->language . ' locales not exist!';
-			exit;
+			throw new InvalidArgumentException($this->language . ' locales not exist!');
 		}
 		
 		$ago = $this->getTimeDiff();
-		if($ago === -1)
+		if($ago === NULL)
 		{
-			return 'The time you set is greater than the current time!';
+			throw new Exception('The time you set is greater than the current time!');
 		}
 		if(empty($ago['locales']))
 		{
