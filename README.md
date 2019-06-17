@@ -6,7 +6,7 @@ timeago.php 是一个语言化之前时间的php库。
 
 ## 安装
 
-> composer require zhusaidong/timeago.php
+> composer require zhusaidong/php-timeago
 
 ## 使用
 
