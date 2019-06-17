@@ -1,6 +1,6 @@
 {
     "name": "zhusaidong/php-timeago",
-    "description": "php timeage",
+    "description": "php timeago library",
     "type": "library",
     "license": "MIT",
     "authors": [
